@@ -3,32 +3,29 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET() {
   try {
-    const [leadsRes, agendamientosRes, closersRes] = await Promise.all([
-      supabase.from('leads').select('*'),
-      supabase.from('agendamientos').select('*'),
-      supabase.from('closers').select('*'),
+    const [leadsRes, citasRes] = await Promise.all([
+      supabase.from('leads_ghl').select('*'),
+      supabase.from('citas_ghl').select('*'),
     ])
 
     if (leadsRes.error) throw new Error(`Leads: ${leadsRes.error.message}`)
-    if (agendamientosRes.error) throw new Error(`Agendamientos: ${agendamientosRes.error.message}`)
+    if (citasRes.error) throw new Error(`Citas: ${citasRes.error.message}`)
 
     const leads = leadsRes.data ?? []
-    const agendamientos = agendamientosRes.data ?? []
-    const closers = closersRes.data ?? []
+    const citas = citasRes.data ?? []
 
     const totalLeads = leads.length
-    const totalCitas = agendamientos.length
+    const totalCitas = citas.length
     const tasaConversion = totalLeads > 0 ? (totalCitas / totalLeads) * 100 : 0
 
     const closerNames = ['Maryory', 'Felipe', 'Nicolas']
     const citasPorCloser = closerNames.map((nombre) => ({
       nombre,
-      citas: agendamientos.filter(
-        (a) => a.closer?.toLowerCase() === nombre.toLowerCase()
+      citas: citas.filter((c) =>
+        c.calendar_name?.toLowerCase().includes(nombre.toLowerCase())
       ).length,
     }))
 
-    // Agrupar leads por día (últimos 14 días)
     const hoy = new Date()
     const leadsPorDia = Array.from({ length: 14 }, (_, i) => {
       const fecha = new Date(hoy)
@@ -37,7 +34,7 @@ export async function GET() {
       return {
         fecha: fechaStr,
         leads: leads.filter((l) => l.created_at?.startsWith(fechaStr)).length,
-        citas: agendamientos.filter((a) => a.created_at?.startsWith(fechaStr)).length,
+        citas: citas.filter((c) => c.created_at?.startsWith(fechaStr)).length,
       }
     })
 
@@ -47,7 +44,6 @@ export async function GET() {
       tasaConversion: Math.round(tasaConversion * 10) / 10,
       citasPorCloser,
       leadsPorDia,
-      closers,
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error desconocido'
