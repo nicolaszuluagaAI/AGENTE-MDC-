@@ -14,30 +14,34 @@ type DashboardData = {
   leadsPorDia: { fecha: string; leads: number; citas: number }[]
 }
 
+const FUENTES = [
+  { label: 'Todo', value: 'all' },
+  { label: 'WhatsApp MDC', value: 'whatsapp_mdc' },
+  { label: 'Instagram Dany', value: 'instagram_dany' },
+  { label: 'Facebook Dany', value: 'facebook_dany' },
+  { label: 'Instagram Sebas', value: 'instagram_sebas' },
+]
+
 const IconUsers = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m6 5.87v-1a4 4 0 00-8 0v1M12 12a4 4 0 100-8 4 4 0 000 8z" />
   </svg>
 )
-
 const IconCalendar = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
   </svg>
 )
-
 const IconTrend = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
   </svg>
 )
-
 const IconTarget = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 )
-
 const IconRefresh = () => (
   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -49,12 +53,13 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+  const [source, setSource] = useState('all')
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (src: string) => {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/dashboard')
+      const res = await fetch(`/api/dashboard?source=${src}`)
       const json = await res.json()
       if (!res.ok) throw new Error(json.error ?? 'Error al cargar datos')
       setData(json)
@@ -67,10 +72,15 @@ export default function Dashboard() {
   }, [])
 
   useEffect(() => {
-    fetchData()
-    const interval = setInterval(fetchData, 60_000)
+    fetchData(source)
+    const interval = setInterval(() => fetchData(source), 60_000)
     return () => clearInterval(interval)
-  }, [fetchData])
+  }, [fetchData, source])
+
+  const handleSource = (val: string) => {
+    setSource(val)
+    fetchData(val)
+  }
 
   const closerConMasCitas = data?.citasPorCloser.reduce((a, b) => (a.citas >= b.citas ? a : b))
 
@@ -117,14 +127,36 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-4">
             {lastUpdate && <span className="text-xs" style={{ color: '#555' }}>Actualizado {lastUpdate.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</span>}
-            <button onClick={fetchData} disabled={loading} className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ color: '#c9a84c', border: '1px solid #333', backgroundColor: 'transparent' }}>
+            <button onClick={() => fetchData(source)} disabled={loading} className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg" style={{ color: '#c9a84c', border: '1px solid #333', backgroundColor: 'transparent' }}>
               <span className={loading ? 'animate-spin' : ''}><IconRefresh /></span>
               Actualizar
             </button>
           </div>
         </header>
 
-        <main className="px-8 py-8 space-y-8">
+        {/* Filtro por fuente */}
+        <div className="px-8 pt-6">
+          <div className="flex gap-2 flex-wrap">
+            {FUENTES.map((f) => (
+              <button
+                key={f.value}
+                onClick={() => handleSource(f.value)}
+                className="text-sm px-4 py-1.5 rounded-full transition-all"
+                style={{
+                  backgroundColor: source === f.value ? '#c9a84c' : '#1e1e1e',
+                  color: source === f.value ? '#000' : '#888',
+                  border: '1px solid',
+                  borderColor: source === f.value ? '#c9a84c' : '#333',
+                  fontWeight: source === f.value ? 600 : 400,
+                }}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <main className="px-8 py-6 space-y-8">
           {error && <div className="rounded-xl p-4 text-sm" style={{ backgroundColor: '#1a0a0a', border: '1px solid #3d1515', color: '#f87171' }}><strong>Error:</strong> {error}</div>}
           {loading && !data && <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">{[...Array(4)].map((_, i) => <div key={i} className="rounded-2xl p-6 h-28 animate-pulse" style={{ backgroundColor: '#1a1a1a' }} />)}</div>}
           {data && (

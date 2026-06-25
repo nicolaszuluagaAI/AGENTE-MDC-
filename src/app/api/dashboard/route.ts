@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const [leadsRes, citasRes] = await Promise.all([
-      supabase.from('leads_ghl').select('*'),
-      supabase.from('citas_ghl').select('*'),
-    ])
+    const { searchParams } = new URL(request.url)
+    const source = searchParams.get('source')
+
+    let leadsQuery = supabase.from('leads_ghl').select('*')
+    let citasQuery = supabase.from('citas_ghl').select('*')
+
+    if (source && source !== 'all') {
+      leadsQuery = leadsQuery.eq('source', source)
+      citasQuery = citasQuery.eq('source', source)
+    }
+
+    const [leadsRes, citasRes] = await Promise.all([leadsQuery, citasQuery])
 
     if (leadsRes.error) throw new Error(`Leads: ${leadsRes.error.message}`)
     if (citasRes.error) throw new Error(`Citas: ${citasRes.error.message}`)
@@ -49,4 +57,4 @@ export async function GET() {
     const message = error instanceof Error ? error.message : 'Error desconocido'
     return NextResponse.json({ error: message }, { status: 500 })
   }
-}
+} 
