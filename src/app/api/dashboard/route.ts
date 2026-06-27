@@ -26,11 +26,15 @@ export async function GET(request: Request) {
     const totalCitas = citas.length
     const tasaConversion = totalLeads > 0 ? (totalCitas / totalLeads) * 100 : 0
 
-    const closerNames = ['Maryory', 'Felipe', 'Nicolas']
-    const citasPorCloser = closerNames.map((nombre) => ({
+    const closers = [
+      { nombre: 'Maryory', email: 'maryory@mdctradingacademy.com' },
+      { nombre: 'Felipe', email: 'felipe@mdctradingacademy.com' },
+      { nombre: 'Nicolas', email: 'nicolas@mdctradingacademy.com' },
+    ]
+    const citasPorCloser = closers.map(({ nombre, email }) => ({
       nombre,
       citas: citas.filter((c) =>
-        c.calendar_name?.toLowerCase().includes(nombre.toLowerCase())
+        c.closer_email?.toLowerCase() === email.toLowerCase()
       ).length,
     }))
 
@@ -57,4 +61,4 @@ export async function GET(request: Request) {
     const message = error instanceof Error ? error.message : 'Error desconocido'
     return NextResponse.json({ error: message }, { status: 500 })
   }
-} 
+}
