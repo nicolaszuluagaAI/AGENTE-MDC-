@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 export async function GET(req: NextRequest) {
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SU_BASE_ANON_KEY!
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
     const source = req.nextUrl.searchParams.get('source') ?? 'all'
