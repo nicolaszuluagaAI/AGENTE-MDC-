@@ -1,26 +1,12 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
 export async function POST(request: NextRequest) {
     const { email, password } = await request.json()
 
-    const response = NextResponse.json({ success: true })
-
-    const supabase = createServerClient(
+    const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SU_BASE_ANON_KEY!,
-        {
-            cookies: {
-                getAll() {
-                    return request.cookies.getAll()
-                },
-                setAll(cookiesToSet) {
-                    cookiesToSet.forEach(({ name, value, options }) =>
-                        response.cookies.set(name, value, options)
-                    )
-                },
-            },
-        }
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
     const { error } = await supabase.auth.signInWithPassword({ email, password })
@@ -28,6 +14,14 @@ export async function POST(request: NextRequest) {
     if (error) {
         return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 })
     }
+
+    const response = NextResponse.json({ success: true })
+    response.cookies.set('mdc-session', 'authenticated', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7
+    })
 
     return response
 }
