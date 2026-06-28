@@ -151,8 +151,8 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <MetricCard titulo="Leads recibidos" valor={data.totalLeads.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconUsers />} color="azul" />
                 <MetricCard titulo="Citas agendadas" valor={data.totalCitas.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconCalendar />} color="verde" />
-                <MetricCard titulo="Tasa de conversiÃ³n" valor={`${data.tasaConversion}%`} subtitulo="Citas / Leads" icono={<IconTrend />} color="naranja" />
-                <MetricCard titulo="Closer lÃ­der" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : 'â€”'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
+                <MetricCard titulo="Tasa de conversión" valor={`${data.tasaConversion}%`} subtitulo="Citas / Leads" icono={<IconTrend />} color="naranja" />
+                <MetricCard titulo="Closer líder" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : 'â€”'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
               </div>
               <div className="grid lg:grid-cols-2 gap-6">
                 <CloserChart data={data.citasPorCloser} />
