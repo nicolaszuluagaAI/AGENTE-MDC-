@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
@@ -98,7 +98,7 @@ export default function Dashboard() {
         <nav className="flex-1 px-3 py-4 space-y-1">
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" style={{ backgroundColor: '#1e1e1e', color: '#fff' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-            Analíticas
+            AnalÃ­ticas
           </div>
           <Link href="/leads" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm" style={{ color: '#666' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m6 5.87v-1a4 4 0 00-8 0v1M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
@@ -110,8 +110,9 @@ export default function Dashboard() {
           </Link>
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm" style={{ color: '#666' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-            Configuración
+            ConfiguraciÃ³n
           </div>
+        <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login' }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', margin: '8px', background: 'transparent', border: 'none', borderRadius: '8px', color: '#6b7280', fontSize: '14px', cursor: 'pointer', width: 'calc(100% - 16px)' }}>Cerrar sesion</button>
         </nav>
         <div className="px-5 py-4" style={{ borderTop: '1px solid #222' }}>
           <p className="text-xs" style={{ color: '#444' }}>Powered by Inevo AI</p>
@@ -152,8 +153,8 @@ export default function Dashboard() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <MetricCard titulo="Leads recibidos" valor={data.totalLeads.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconUsers />} color="azul" />
                 <MetricCard titulo="Citas agendadas" valor={data.totalCitas.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconCalendar />} color="verde" />
-                <MetricCard titulo="Tasa de conversión" valor={`${data.tasaConversion}%`} subtitulo="Citas / Leads" icono={<IconTrend />} color="naranja" />
-                <MetricCard titulo="Closer líder" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : '—'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
+                <MetricCard titulo="Tasa de conversiÃ³n" valor={`${data.tasaConversion}%`} subtitulo="Citas / Leads" icono={<IconTrend />} color="naranja" />
+                <MetricCard titulo="Closer lÃ­der" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : 'â€”'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
               </div>
               <div className="grid lg:grid-cols-2 gap-6">
                 <CloserChart data={data.citasPorCloser} />
@@ -175,7 +176,7 @@ export default function Dashboard() {
                         <tr key={c.nombre} style={{ borderBottom: i < data.citasPorCloser.length - 1 ? '1px solid #1a1a1a' : 'none' }}>
                           <td className="px-6 py-4"><div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ backgroundColor: ['#6366f1', '#10b981', '#c9a84c'][i] }} /><span className="font-medium text-white">{c.nombre}</span></div></td>
                           <td className="px-6 py-4 text-right font-bold text-white">{c.citas}</td>
-                          <td className="px-6 py-4 text-right" style={{ color: '#666' }}>{data.totalCitas > 0 ? `${Math.round((c.citas / data.totalCitas) * 100)}%` : '—'}</td>
+                          <td className="px-6 py-4 text-right" style={{ color: '#666' }}>{data.totalCitas > 0 ? `${Math.round((c.citas / data.totalCitas) * 100)}%` : 'â€”'}</td>
                         </tr>
                       ))}
                     </tbody>
