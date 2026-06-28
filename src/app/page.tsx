@@ -98,7 +98,7 @@ export default function Dashboard() {
         <nav className="flex-1 px-3 py-4 space-y-1">
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium" style={{ backgroundColor: '#1e1e1e', color: '#fff' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-            AnalÃ­ticas
+            Analíticas
           </div>
           <Link href="/leads" className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm" style={{ color: '#666' }}>
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m6 5.87v-1a4 4 0 00-8 0v1M12 12a4 4 0 100-8 4 4 0 000 8z" /></svg>
@@ -110,7 +110,7 @@ export default function Dashboard() {
           </Link>
           <div className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm" style={{ color: '#666' }}>
           </div>
-        <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login' }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', margin: '8px', background: 'transparent', border: 'none', borderRadius: '8px', color: '#6b7280', fontSize: '14px', cursor: 'pointer', width: 'calc(100% - 16px)' }}>Cerrar sesión</button>
+          <button onClick={async () => { await fetch('/api/auth/logout', { method: 'POST' }); window.location.href = '/login' }} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 12px', margin: '8px', background: 'transparent', border: 'none', borderRadius: '8px', color: '#6b7280', fontSize: '14px', cursor: 'pointer', width: 'calc(100% - 16px)' }}>Cerrar sesión</button>
         </nav>
         <div className="px-5 py-4" style={{ borderTop: '1px solid #222' }}>
           <p className="text-xs" style={{ color: '#444' }}>Powered by Inevo AI</p>
