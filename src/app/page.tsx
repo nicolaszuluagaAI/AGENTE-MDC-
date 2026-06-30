@@ -152,7 +152,7 @@ export default function Dashboard() {
                 <MetricCard titulo="Leads recibidos" valor={data.totalLeads.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconUsers />} color="azul" />
                 <MetricCard titulo="Citas agendadas" valor={data.totalCitas.toLocaleString('es-CO')} subtitulo="Total acumulado" icono={<IconCalendar />} color="verde" />
                 <MetricCard titulo="Tasa de conversión" valor={`${data.tasaConversion}%`} subtitulo="Citas / Leads" icono={<IconTrend />} color="naranja" />
-                <MetricCard titulo="Closer líder" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : 'â€”'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
+                <MetricCard titulo="Closer líder" valor={closerConMasCitas?.citas ? closerConMasCitas.nombre : '-'} subtitulo={closerConMasCitas?.citas ? `${closerConMasCitas.citas} cita(s)` : 'Sin datos'} icono={<IconTarget />} color="violeta" />
               </div>
               <div className="grid lg:grid-cols-2 gap-6">
                 <CloserChart data={data.citasPorCloser} />
@@ -174,7 +174,7 @@ export default function Dashboard() {
                         <tr key={c.nombre} style={{ borderBottom: i < data.citasPorCloser.length - 1 ? '1px solid #1a1a1a' : 'none' }}>
                           <td className="px-6 py-4"><div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full" style={{ backgroundColor: ['#6366f1', '#10b981', '#c9a84c'][i] }} /><span className="font-medium text-white">{c.nombre}</span></div></td>
                           <td className="px-6 py-4 text-right font-bold text-white">{c.citas}</td>
-                          <td className="px-6 py-4 text-right" style={{ color: '#666' }}>{data.totalCitas > 0 ? `${Math.round((c.citas / data.totalCitas) * 100)}%` : 'â€”'}</td>
+                          <td className="px-6 py-4 text-right" style={{ color: '#666' }}>{data.totalCitas > 0 ? `${Math.round((c.citas / data.totalCitas) * 100)}%` : '-'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -188,4 +188,3 @@ export default function Dashboard() {
     </div>
   )
 }
-
